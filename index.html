@@ -565,14 +565,7 @@
 
     .portfolio-item:hover .portfolio-overlay { opacity: 1; }
 
-    .portfolio-label {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--gold-light);
-      margin-bottom: 4px;
-    }
+    .portfolio-label { display:flex; align-items:center; gap:5px; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 4px; }
 
     .portfolio-name {
       font-family: 'Cormorant Garamond', serif;
@@ -1653,6 +1646,137 @@
       .blogs-grid { grid-template-columns: 1fr; }
       
     }
+
+    /* ══════════════════════════════════════════
+       PATCH: All 8 improvements
+    ══════════════════════════════════════════ */
+
+    /* 1. BORDER-RADIUS – Buttons */
+    .btn-primary  { border-radius: 6px; }
+    .btn-outline  { border-radius: 6px; }
+    .btn-dark     { border-radius: 6px; }
+    .nav-cta      { border-radius: 6px; }
+    .mobile-nav-cta { border-radius: 6px; }
+    .social-icon-btn { border-radius: 6px; }
+
+    /* 1. BORDER-RADIUS – Form inputs */
+    .form-group input,
+    .form-group select,
+    .form-group textarea { border-radius: 6px; }
+
+    /* 1. BORDER-RADIUS – Cards (with overflow:hidden so img zoom stays clipped) */
+    .service-card   { border-radius: 0; }   /* keep grid flush */
+    .testimonial-card { border-radius: 10px; }
+    .recent-card    { border-radius: 12px; overflow: hidden; }
+    .about-image    { border-radius: 12px; }
+    .blog-img-link  { border-radius: 10px; overflow: hidden; }
+
+    /* 1. BORDER-RADIUS – Service grid: rounded outer corners only */
+    .services-grid  { border-radius: 12px; overflow: hidden; }
+
+    /* 1. PORTFOLIO: gap grid, rounded corners, overflow:hidden on item */
+    .uniform-grid {
+      display: grid !important;
+      grid-template-columns: repeat(3, 1fr) !important;
+      gap: 20px !important;
+      border-radius: 0;
+    }
+    .uniform-grid .portfolio-item {
+      height: 380px !important;
+      border-radius: 12px;
+      overflow: hidden;        /* clips scaled image to rounded corners */
+    }
+    /* 3. FIX: img zoom must not break border-radius — use transform on the img,
+       keep overflow:hidden on the wrapper (already set above). */
+    .uniform-grid .portfolio-item img {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1);
+      border-radius: 0; /* img itself has no radius; parent clips it */
+    }
+    /* Same fix for any other hovered images with a clipping wrapper */
+    .about-image img     { border-radius: 0; }
+    .blog-img-link img   { border-radius: 0; }
+    .recent-img-wrapper  { border-radius: 12px 12px 0 0; overflow: hidden; }
+    .recent-img-wrapper img { border-radius: 0; }
+
+    /* 1. PRODUCTS grid: separate cards with gap & individual border-radius */
+    #products .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      border: none;
+      border-radius: 0;
+      overflow: visible;
+    }
+    #products .service-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      border-right: 1px solid var(--border) !important;
+      border-bottom: 1px solid var(--border) !important;
+      overflow: hidden;
+      transition: background 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+    #products .service-card:hover {
+      background: var(--white);
+      box-shadow: 0 8px 32px rgba(28,28,26,0.08);
+      transform: translateY(-3px);
+    }
+
+    /* 4. INSTAGRAM / SOCIAL ICON FIX – ensure stroke icons render correctly */
+    .topbar-social svg[viewBox] path[d*="11.37"],
+    .topbar-social svg[viewBox] rect,
+    .topbar-social svg[viewBox] line {
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+    }
+    /* Override fill:currentColor on topbar-social for stroke-based icons */
+    .topbar-social svg { fill: none; stroke: currentColor; stroke-width: 1.8; }
+    /* Facebook is a fill icon – fix it specifically */
+    .topbar-social[aria-label="Facebook"] svg { fill: currentColor; stroke: none; }
+    .topbar-social[aria-label="Instagram"] svg { fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+    /* Same for social-icon-btn in footer/contact */
+    .social-icon-btn[aria-label="Instagram"] svg,
+    .social-icon-btn.dark[aria-label="Instagram"] svg { fill: none; stroke: currentColor; stroke-width: 1.8; }
+    /* Auto-detect: instagram SVG has rect+path+line → stroke not fill */
+    .social-icon-btn svg rect,
+    .social-icon-btn svg path[d*="11.37"],
+    .social-icon-btn svg line { fill: none; stroke: currentColor; stroke-width: 1.8; }
+    /* Facebook path IS fill */
+    .social-icon-btn svg path[d*="M18 2h-3"] { fill: currentColor; stroke: none; }
+
+    /* 5. TOPBAR MOBILE – fix overflow/squish */
+    @media (max-width: 640px) {
+      .topbar { padding: 0 14px; height: auto; min-height: 38px; flex-wrap: nowrap; gap: 8px; }
+      .topbar-left { gap: 10px; overflow: hidden; flex-shrink: 1; min-width: 0; }
+      .topbar-item { font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+      .topbar-item:first-child { display: none; } /* hide address on very small screens */
+      .topbar-divider { display: none; }
+      .topbar-right { gap: 8px; flex-shrink: 0; }
+      .topbar-social { width: 24px; height: 24px; }
+    }
+    @media (max-width: 380px) {
+      .topbar-item { max-width: 130px; font-size: 9.5px; }
+    }
+
+    /* 2. RESPONSIVE: fix service grid at tablet */
+    @media (max-width: 1024px) {
+      #products .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      #products .service-card { border-right: 1px solid var(--border) !important; }
+      .uniform-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+    @media (max-width: 640px) {
+      #products .services-grid { grid-template-columns: 1fr; }
+      .uniform-grid { grid-template-columns: 1fr !important; }
+      .uniform-grid .portfolio-item { height: 280px !important; }
+      .cta-banner { padding: 60px 20px; background-attachment: scroll; }
+      footer { padding: 40px 20px 20px !important; }
+    }
   </style>
 </head>
 <body>
@@ -1756,6 +1880,12 @@
       <li><a href="#contact" onclick="toggleMobileMenu()">Contact</a></li>
     </ul>
 
+    <div style="padding: 20px 0 0; margin-top: auto;">
+      <a href="#contact" onclick="toggleMobileMenu()" style="display:block;background:var(--gold);color:var(--white);text-align:center;padding:15px 28px;font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;border-radius:6px;transition:background 0.2s;">
+        Free Estimate
+      </a>
+    </div>
+
     <div class="mobile-footer">
       <a href="https://maps.google.com/?q=9560+Blenheim+Blvd+Fairfax+VA" class="mobile-contact">
         <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1839,21 +1969,21 @@
       <div class="stat-icon">
         <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
       </div>
-      <div class="stat-number">18k</div>
+      <div class="stat-number"><span class="counter" data-target="18" data-suffix="k+">0k+</span></div>
       <div class="stat-label">Custom Creations</div>
     </div>
     <div class="stat-item">
       <div class="stat-icon">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line><line x1="15" y1="3" x2="15" y2="21"></line></svg>
       </div>
-      <div class="stat-number">33k</div>
+      <div class="stat-number"><span class="counter" data-target="33" data-suffix="k+">0k+</span></div>
       <div class="stat-label">Sq. Ft. Crafted</div>
     </div>
     <div class="stat-item">
       <div class="stat-icon">
         <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
       </div>
-      <div class="stat-number">2k</div>
+      <div class="stat-number"><span class="counter" data-target="2" data-suffix="k+">0k+</span></div>
       <div class="stat-label">Happy Clients</div>
     </div>
   </div>
@@ -2050,7 +2180,7 @@
       <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop" alt="Zamani Project" />
       <div class="portfolio-overlay">
         <div>
-          <div class="portfolio-label">Project</div>
+          <div class="portfolio-label" style="display:flex;align-items:center;gap:4px;"><svg class="h-6 w-6" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;stroke:currentColor;fill:none;stroke-width:1.5;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg> Project</div>
           <div class="portfolio-name">Zamani Project</div>
         </div>
       </div>
@@ -2060,7 +2190,7 @@
       <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&h=500&fit=crop" alt="Westland Project" />
       <div class="portfolio-overlay">
         <div>
-          <div class="portfolio-label">Project</div>
+          <div class="portfolio-label" style="display:flex;align-items:center;gap:4px;"><svg class="h-6 w-6" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;stroke:currentColor;fill:none;stroke-width:1.5;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg> Project</div>
           <div class="portfolio-name">Westland Project</div>
         </div>
       </div>
@@ -2070,7 +2200,7 @@
       <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop" alt="Tilden Project" />
       <div class="portfolio-overlay">
         <div>
-          <div class="portfolio-label">Project</div>
+          <div class="portfolio-label" style="display:flex;align-items:center;gap:4px;"><svg class="h-6 w-6" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;stroke:currentColor;fill:none;stroke-width:1.5;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg> Project</div>
           <div class="portfolio-name">Tilden Project</div>
         </div>
       </div>
@@ -2080,17 +2210,17 @@
       <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=500&fit=crop" alt="Rubenstein Project" />
       <div class="portfolio-overlay">
         <div>
-          <div class="portfolio-label">Project</div>
+          <div class="portfolio-label" style="display:flex;align-items:center;gap:4px;"><svg class="h-6 w-6" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;stroke:currentColor;fill:none;stroke-width:1.5;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg> Project</div>
           <div class="portfolio-name">Rubenstein Project</div>
         </div>
       </div>
     </div>
     
     <div class="portfolio-item">
-      <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800&h=500&fit=crop" alt="Royal Manor Way Project" />
+      <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=500&fit=crop" alt="Royal Manor Way Project" />
       <div class="portfolio-overlay">
         <div>
-          <div class="portfolio-label">Project</div>
+          <div class="portfolio-label" style="display:flex;align-items:center;gap:4px;"><svg class="h-6 w-6" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;stroke:currentColor;fill:none;stroke-width:1.5;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg> Project</div>
           <div class="portfolio-name">Royal Manor Way Project</div>
         </div>
       </div>
@@ -2100,7 +2230,7 @@
       <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&h=500&fit=crop" alt="2507 I St NW Project" />
       <div class="portfolio-overlay">
         <div>
-          <div class="portfolio-label">Project</div>
+          <div class="portfolio-label" style="display:flex;align-items:center;gap:4px;"><svg class="h-6 w-6" style="width:12px;height:12px;display:inline-block;vertical-align:middle;margin-right:4px;stroke:currentColor;fill:none;stroke-width:1.5;" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg> Project</div>
           <div class="portfolio-name">2507 I St NW Project</div>
         </div>
       </div>
@@ -2613,6 +2743,43 @@ setInterval(() => {
 
     const skillsSection = document.querySelector('.skills-section');
     if (skillsSection) observer.observe(skillsSection);
+
+    // ── COUNTER ANIMATION ──
+    function animateCounters() {
+      document.querySelectorAll('.counter').forEach(function(el) {
+        var target = parseInt(el.dataset.target, 10);
+        var suffix = el.dataset.suffix || '';
+        var duration = 1800;
+        var start = null;
+        function step(timestamp) {
+          if (!start) start = timestamp;
+          var progress = Math.min((timestamp - start) / duration, 1);
+          // ease-out cubic
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var current = Math.round(eased * target);
+          el.textContent = '+' + current + suffix.replace('+','');
+          if (progress < 1) requestAnimationFrame(step);
+          else el.textContent = '+' + target + suffix.replace('+','');
+        }
+        requestAnimationFrame(step);
+      });
+    }
+
+    // Trigger counter when stats bar enters viewport
+    var statsBar = document.querySelector('.stats-bar');
+    if (statsBar) {
+      var counterTriggered = false;
+      var counterObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting && !counterTriggered) {
+            counterTriggered = true;
+            animateCounters();
+          }
+        });
+      }, { threshold: 0.4 });
+      counterObs.observe(statsBar);
+    }
+
   </script>
 
 
